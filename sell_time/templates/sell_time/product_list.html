@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Time Shop</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        select {
+            background-color: lightblue;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .past-select {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buy Some Time!</h1>
+    <div class = "button-row">
+        <form method = "post" action="">
+            {% csrf_token %}
+            <select name = "selected_package" onchange = "this.form.submit()">
+                <option selected disabled>Towards Your Future</option>
+                {% for package in future_packages %}
+                    <option value="{{ package.id }}">{{ package.duration_minutes }} min - £{{ package.price|floatformat:2 }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    
+        <form method = "post" action = "">
+            {% csrf_token %}
+            <select name="selected_package" onchange = "this.form.submit()">
+                <option selected disabled>For Your Past</option>
+                {% for package in past_packages %}
+                    <option value = "{{ package.id }}">{{ package.duration_minutes }} min - £{{ package.price|floatformat:2 }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    
+    <div style = "text-align: center; margin-top: 30px;">
+        <a href = "{% url 'cart' %}" class = "btn">Check Out</a>
+        <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
+        <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
+    </div>
+</body>
+</html>
