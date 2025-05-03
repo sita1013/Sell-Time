@@ -1,3 +1,5 @@
+# models.py
+
 from django.db import models
 
 class TimePackage(models.Model):
@@ -10,7 +12,37 @@ class TimePackage(models.Model):
     description = models.TextField()
     duration_minutes = models.IntegerField()
     price = models.DecimalField(max_digits = 10, decimal_places = 2)
-    use_type = models.CharField(max_length = 10, choices = TYPE_CHOICES, default = 'future')
+    use_type = models.CharField(max_length = 10, choices=TYPE_CHOICES, default = 'future')
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def seed_packages(cls):
+        if cls.objects.exists():
+            return False 
+
+        future_packages = [
+            cls(
+                name = f"Future Use - {i} minutes",
+                description = "Package for future time usage",
+                duration_minutes = i,
+                price = 50.00 * i,
+                use_type = 'future',
+            )
+            for i in range(1, 10001)
+        ]
+
+        past_packages = [
+            cls(
+                name = f"Past Use - {i} minutes",
+                description = "Package for past time usage",
+                duration_minutes = i,
+                price = 50.00 * i,
+                use_type = 'past',
+            )
+            for i in range(1, 1001)
+        ]
+
+        cls.objects.bulk_create(future_packages + past_packages)
+        return True  
