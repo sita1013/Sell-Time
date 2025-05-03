@@ -6,7 +6,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         if TimePackage.objects.exists():
-            self.stdout.write(self.style.WARNING("TimePackages already exist. Skipping.")) #stupidly embedded loops into my local django shell before realising this will cause issues in deployment
+            self.stdout.write(self.style.WARNING("TimePackages already exist. Skipping.")) 
+            #stupidly embedded loops into my local django shell before realising this will cause issues in deployment
             return
 
         for i in range(1, 10001):
