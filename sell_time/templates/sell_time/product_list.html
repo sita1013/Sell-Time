@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Time Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         h1 {
             text-align: center;
@@ -19,32 +20,24 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .past-select {
-            background-color: lightcoral;
+        #future-select {
+            background-color: lightblue;
         }
-    </style>
+        #past-select {
+            background-color: lightcoral;
+        }    </style>
 </head>
 <body>
     <h1>Buy Some Time!</h1>
     <div class = "button-row">
-        <form method = "post" action="">
+        <form method = "post">
             {% csrf_token %}
-            <select name = "selected_package" onchange = "this.form.submit()">
-                <option selected disabled>Towards Your Future</option>
-                {% for package in future_packages %}
-                    <option value="{{ package.id }}">{{ package.duration_minutes }} min - £{{ package.price|floatformat:2 }}</option>
-                {% endfor %}
-            </select>
+            <select id = "future-select" name="selected_package"></select>
         </form>
     
-        <form method = "post" action = "">
+        <form method = "post">
             {% csrf_token %}
-            <select name="selected_package" onchange = "this.form.submit()">
-                <option selected disabled>For Your Past</option>
-                {% for package in past_packages %}
-                    <option value = "{{ package.id }}">{{ package.duration_minutes }} min - £{{ package.price|floatformat:2 }}</option>
-                {% endfor %}
-            </select>
+            <select id = "past-select" name="selected_package"></select>
         </form>
     </div>
     
@@ -53,5 +46,37 @@
         <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
         <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
     </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        function initSelect2(id, type, placeholder) {
+            $(id).select2({
+                placeholder: placeholder,
+                ajax: {
+                    url: "{% url 'timepackage_search' %}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            type: type
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                }
+            }).on('change', function () {
+                this.form.submit();
+            });
+        }
+
+        initSelect2('#future-select', 'future', 'Towards Your Future');
+        initSelect2('#past-select', 'past', 'For Your Past');
+    </script>
 </body>
 </html>

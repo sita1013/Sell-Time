@@ -1,6 +1,5 @@
-# models.py
-
 from django.db import models
+from django.db import transaction
 
 class TimePackage(models.Model):
     TYPE_CHOICES = (
@@ -18,31 +17,27 @@ class TimePackage(models.Model):
         return self.name
 
     @classmethod
+    @transaction.atomic
     def seed_packages(cls):
-        if cls.objects.exists():
-            return False 
-
-        future_packages = [
-            cls(
-                name = f"Future - {i} minutes",
-                description = "Package for future time usage",
-                duration_minutes = i,
-                price = 15.00 * i,
-                use_type = 'future',
+        for i in range(1, 1001):
+            package, created = cls.objects.update_or_create(
+                duration_minutes = i, 
+                use_type = 'future', 
+                defaults = {
+                    'name': f"Future - {i} minutes",
+                    'description': "Package for future time usage", 
+                    'price': 15.00 * 1,
+                }
+            )        
+            
+        for i in range(1, 1001):
+            package, created = cls.objects.update_or_create(
+                duration_minutes = i, 
+                use_type = 'past', 
+                defaults = {
+                    'name': f"Past - {i} minutes",
+                    'description': "Package for past time usage", 
+                    'price': 15.00 * 1,
+                }
             )
-            for i in range(1, 10001)
-        ]
-
-        past_packages = [
-            cls(
-                name = f"Past - {i} minutes",
-                description = "Package for past time usage",
-                duration_minutes = i,
-                price = 15.00 * i,
-                use_type = 'past',
-            )
-            for i in range(1, 1001)
-        ]
-
-        cls.objects.bulk_create(future_packages + past_packages)
         return True  
