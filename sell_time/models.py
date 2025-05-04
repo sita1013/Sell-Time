@@ -24,10 +24,10 @@ class TimePackage(models.Model):
 
         future_packages = [
             cls(
-                name = f"Future Use - {i} minutes",
+                name = f"Future - {i} minutes",
                 description = "Package for future time usage",
                 duration_minutes = i,
-                price = 50.00 * i,
+                price = 15.00 * i,
                 use_type = 'future',
             )
             for i in range(1, 10001)
@@ -35,10 +35,10 @@ class TimePackage(models.Model):
 
         past_packages = [
             cls(
-                name = f"Past Use - {i} minutes",
+                name = f"Past - {i} minutes",
                 description = "Package for past time usage",
                 duration_minutes = i,
-                price = 50.00 * i,
+                price = 15.00 * i,
                 use_type = 'past',
             )
             for i in range(1, 1001)
