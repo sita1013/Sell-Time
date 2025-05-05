@@ -25,19 +25,26 @@
         }
         #past-select {
             background-color: lightcoral;
-        }    </style>
+        }    
+    </style> 
 </head>
 <body>
-    <h1>Buy Some Time!</h1>
-    <div class = "button-row">
-        <form method = "post">
-            {% csrf_token %}
-            <select id = "future-select" name="selected_package"></select>
+    <h1>Buy Some Time!</h1> 
+    <div class = "button-row"> 
+        <form method = "post"> 
+            {% csrf_token %} 
+            <label>Enter Minutes (Future):</label> 
+            <input type="number" name="duration" min="1" max="1000" required>
+            <input type="hidden" name="use_type" value="future"> 
+            <button type = "submit">Add to Cart</button> 
         </form>
     
         <form method = "post">
             {% csrf_token %}
-            <select id = "past-select" name="selected_package"></select>
+            <label>Enter Minutes (Past):</label> 
+            <input type="number" name="duration" min="1" max="1000" required> 
+            <input type="hidden" name="use_type" value="future"> 
+            <button type="submit">Add to Cart</button>
         </form>
     </div>
     
@@ -46,37 +53,5 @@
         <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
         <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        function initSelect2(id, type, placeholder) {
-            $(id).select2({
-                placeholder: placeholder,
-                ajax: {
-                    url: "{% url 'timepackage_search' %}",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            q: params.term,
-                            type: type
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data.results
-                        };
-                    },
-                    cache: true
-                }
-            }).on('change', function () {
-                this.form.submit();
-            });
-        }
-
-        initSelect2('#future-select', 'future', 'Towards Your Future');
-        initSelect2('#past-select', 'past', 'For Your Past');
-    </script>
 </body>
 </html>

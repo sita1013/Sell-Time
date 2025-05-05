@@ -9,9 +9,10 @@ def homepage(request):
 
 def product_list(request):
     if request.method == 'POST':
-        package_id = request.POST.get('selected_package')
-        if package_id:
-            package = get_object_or_404(TimePackage, id=package_id)
+        duration = request.POST.get('duration')
+        use_type = request.POST.get('use_type')            
+        try:
+            package = TimePackage.objects.get(duration_minutes = duration, use_type = use_type)
             cart = request.session.get('cart', [])
             cart.append({
                 'id': package.id,
@@ -21,7 +22,8 @@ def product_list(request):
             })
             request.session['cart'] = cart
             request.session.modified = True
-    packages = TimePackage.objects.all().order_by('duration_minutes')
+        except:
+            print("Invalid input. Please type a whole number.")
     return render(request, 'sell_time/product_list.html')
 
 def timepackage_search(request):

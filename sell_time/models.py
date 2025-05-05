@@ -30,7 +30,7 @@ class TimePackage(models.Model):
                     name = f"Future - {i} minutes",
                     description = "Package for future time usage", 
                     duration_minutes = i,
-                    price = Decimal('15.00') * i,
+                    price = Decimal('1.00') * i,
                     use_type = 'future'
                 ))     
             if i not in past_existing:
@@ -38,7 +38,7 @@ class TimePackage(models.Model):
                     name = f"Past - {i} minutes",
                     description = "Package for past time usage", 
                     duration_minutes = i,
-                    price = Decimal('15.00') * i,
+                    price = Decimal('1.00') * i,
                     use_type = 'past'
                 ))
             if i in future_existing and i in past_existing:
