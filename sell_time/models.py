@@ -19,35 +19,32 @@ class TimePackage(models.Model):
     @classmethod
     @transaction.atomic
     def seed_packages(cls):
-        print(">>> Seeding basic test packages...")
-        created_future = 0
-        created_past = 0
-        for i in range(1, 6):
-            obj, created = cls.objects.get_or_create(
-                duration_minutes = i, 
-                use_type = 'future', 
-                defaults = {
-                    'name': f"Future - {i} minutes",
-                    'description': "Package for future time usage", 
-                    'price': 15.00 * 1,
-                }
-            )
-            if created: 
-                created_future += 1      
-            
-        for i in range(1, 6):
-            obj, created = cls.objects.get_or_create(
-                duration_minutes = i, 
-                use_type = 'past', 
-                defaults = {
-                    'name': f"Past - {i} minutes",
-                    'description': "Package for past time usage", 
-                    'price': 15.00 * 1,
-                }
-            )
-            if created: 
-                created_past += 1
-
-        print(f">>> Created {created_future} 'future' packages.")
-        print(f">>>Created {created_past} 'past' packages.")
+        print(">>> Seeding 1k future and 1k past packages")
+        future_existing = cls.objects.filter(use_type = 'future').values_list('duration_minutes', flat = True)
+        past_existing = cls.objects.filter(use_type = 'past').values_list('duration_minutes', flat = True)
+        future_to_create = []
+        past_to_create = []
+        for i in range(1, 1001):
+            if i not in future_existing: 
+                future_to_create.append(cls(
+                    name = f"Future - {i} minutes",
+                    description = "Package for future time usage", 
+                    duration_minutes = i,
+                    price = 15.00,
+                    use_type = 'future'
+                ))     
+            if i not in past_existing:
+                past_to_create.append(cls(
+                    name = f"Past - {i} minutes",
+                    description = "Package for past time usage", 
+                    duration_minutes = i,
+                    price = 15.00,
+                    use_type = 'past'
+                ))
+            else:
+                print("Not valid. Please try again.")
+        cls.objects.bulk_create(future_to_create)
+        cls.objects.bulk_create(past_to_create)
+        print(f">>> Created {future_to_create} new 'future' packages.")
+        print(f">>>Created {past_to_create} new 'past' packages.")
         return True  
