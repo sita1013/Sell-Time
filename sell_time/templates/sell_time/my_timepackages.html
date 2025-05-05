@@ -1,0 +1,16 @@
+{% extends 'sell_time/base.html' %}
+{% block title %}My Time Packages{% endblock %}
+{% block content %}
+<h1 style="text-align: center;">My Time Packages</h1>
+    {% if packages %}
+        <ul>
+            {% for package in packages %}
+                <li>
+                    {{ package.duration_minutes }} min — {{ package.name }} — £{{ package.price|floatformat:2 }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="text-align: center;">You haven't created any packages yet.</p>
+{% endif %}
+{% endblock %}

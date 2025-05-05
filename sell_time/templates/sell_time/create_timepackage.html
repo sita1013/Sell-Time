@@ -1,0 +1,15 @@
+{% extends 'sell_time/base.html' %}
+{% block title %}Sell Your Time{% endblock %}
+{% block content %}
+<h1 style="text-align: center;">Sell Your Time</h1>
+
+    <form method="post" style="max-width: 500px; margin: auto;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><strong>Note:</strong> You will be paid £1 per minute.</p>
+        {% if price %}
+            <p>Total price: £{{ price|floatformat:2 }}</p>
+        {% endif %}
+        <button type="submit">Create Package</button>
+    </form>
+{% endblock %}

@@ -2,12 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import TimePackage
 from django.db.models import Min 
-from faker import Faker
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import FormView
+from .forms import TimePackageForm
 from django.urls import reverse_lazy
+
+from faker import Faker
 
 def homepage(request):
     return render(request, 'sell_time/homepage.html')
@@ -24,6 +26,30 @@ class SignUpView(FormView):
 def manual_logout(request):
     logout(request)
     return redirect('homepage')
+
+@login_required
+def create_timepackage(request):
+    price = None
+    if request.method == 'POST':
+        form = TimePackageForm(request.POST)
+        if form.is_valid():
+            timepackage = form.save(commit=False)
+            timepackage.price = timepackage.duration_minutes * 1
+            price = timepackage.price
+            timepackage.creator = request.user
+            timepackage.save()
+            return redirect('my_timepackages')
+    else:
+        form = TimePackageForm()
+    return render(request, 'sell_time/create_timepackage.html', {
+        'form': form,
+        'price': price
+    })
+
+@login_required
+def my_timepackages(request):
+    packages = TimePackage.objects.filter(creator=request.user)
+    return render(request, 'sell_time/my_timepackages.html', {'packages': packages})
 
 def product_list(request):
     if request.method == 'POST':

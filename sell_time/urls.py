@@ -15,4 +15,6 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='sell_time/login.html'), name='login'),
     path('logout/', views.manual_logout, name='logout'),
     path('signup/', SignUpView.as_view(), name='signup'),
+    path('sell/', views.create_timepackage, name='create_timepackage'),
+    path('my-time/', views.my_timepackages, name='my_timepackages'),
     ]

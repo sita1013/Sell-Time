@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import transaction
 from decimal import Decimal
+from django.contrib.auth.models import User
 
 class TimePackage(models.Model):
     TYPE_CHOICES = (
@@ -12,6 +13,7 @@ class TimePackage(models.Model):
     duration_minutes = models.IntegerField()
     price = models.DecimalField(max_digits = 10, decimal_places = 2)
     use_type = models.CharField(max_length = 10, choices=TYPE_CHOICES, default = 'future')
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='timepackages')
 
     def __str__(self):
         return self.name
