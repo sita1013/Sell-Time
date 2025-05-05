@@ -1,12 +1,12 @@
 from django.db import models
 from django.db import transaction
+from decimal import Decimal
 
 class TimePackage(models.Model):
     TYPE_CHOICES = (
         ('future', 'Towards Your Future'),
         ('past', 'For Your Past'),
     )
-
     name = models.CharField(max_length=100)
     description = models.TextField()
     duration_minutes = models.IntegerField()
@@ -20,8 +20,8 @@ class TimePackage(models.Model):
     @transaction.atomic
     def seed_packages(cls):
         print(">>> Seeding 1k future and 1k past packages")
-        future_existing = cls.objects.filter(use_type = 'future').values_list('duration_minutes', flat = True)
-        past_existing = cls.objects.filter(use_type = 'past').values_list('duration_minutes', flat = True)
+        future_existing = set(cls.objects.filter(use_type='future').values_list('duration_minutes', flat=True))
+        past_existing = set(cls.objects.filter(use_type='past').values_list('duration_minutes', flat=True))
         future_to_create = []
         past_to_create = []
         for i in range(1, 1001):
@@ -30,7 +30,7 @@ class TimePackage(models.Model):
                     name = f"Future - {i} minutes",
                     description = "Package for future time usage", 
                     duration_minutes = i,
-                    price = 15.00,
+                    price = Decimal('15.00') * i,
                     use_type = 'future'
                 ))     
             if i not in past_existing:
@@ -38,13 +38,14 @@ class TimePackage(models.Model):
                     name = f"Past - {i} minutes",
                     description = "Package for past time usage", 
                     duration_minutes = i,
-                    price = 15.00,
+                    price = Decimal('15.00') * i,
                     use_type = 'past'
                 ))
-            else:
-                print("Not valid. Please try again.")
-        cls.objects.bulk_create(future_to_create)
-        cls.objects.bulk_create(past_to_create)
-        print(f">>> Created {future_to_create} new 'future' packages.")
-        print(f">>>Created {past_to_create} new 'past' packages.")
+            if i in future_existing and i in past_existing:
+                print(f"Package with duration {i} already exists for both types.")
+
+        cls.objects.bulk_create(future_to_create, ignore_conflicts=True)
+        cls.objects.bulk_create(past_to_create, ignore_conflicts=True)
+        print(f">>> Created {len(future_to_create)} new 'future' packages.")
+        print(f">>>Created {len(past_to_create)} new 'past' packages.")
         return True  

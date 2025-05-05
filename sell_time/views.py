@@ -14,11 +14,14 @@ def product_list(request):
             package = get_object_or_404(TimePackage, id=package_id)
             cart = request.session.get('cart', [])
             cart.append({
+                'id': package.id,
                 'name': package.name,
                 'duration': package.duration_minutes,
                 'price': float(package.price)
             })
             request.session['cart'] = cart
+            request.session.modified = True
+    packages = TimePackage.objects.all().order_by('duration_minutes')
     return render(request, 'sell_time/product_list.html')
 
 def timepackage_search(request):
@@ -39,7 +42,7 @@ def cart(request):
     return render(request, 'sell_time/cart.html', {'cart': cart})
 
 def clear_cart(request):
-    request.session['cart'] = []
+    request.session.pop('cart', None)
     return redirect('cart')
 
 def graphs(request):
