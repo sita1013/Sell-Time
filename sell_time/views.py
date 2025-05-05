@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from .models import TimePackage
 from django.db.models import Min 
+from faker import Faker
 
 def homepage(request):
     return render(request, 'sell_time/homepage.html')
