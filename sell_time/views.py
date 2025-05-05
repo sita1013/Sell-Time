@@ -32,9 +32,6 @@ def timepackage_search(request):
         for p in packages
     ]
     return JsonResponse({'results': data})
-    if not data:
-        return JsonResponse({'results': [], 'message': 'No matching packages found.'})
-
 
 def cart(request):
     cart = request.session.get('cart', [])
