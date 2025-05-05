@@ -4,9 +4,26 @@ from .models import TimePackage
 from django.db.models import Min 
 from faker import Faker
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
 
 def homepage(request):
     return render(request, 'sell_time/homepage.html')
+
+class SignUpView(FormView):
+    template_name = 'sell_time/signup.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+def manual_logout(request):
+    logout(request)
+    return redirect('homepage')
 
 def product_list(request):
     if request.method == 'POST':
@@ -48,7 +65,6 @@ def cart(request):
 def clear_cart(request):
     request.session.pop('cart', None)
     return redirect('cart')
-
 
 def pay(request):
     if request.method == 'POST':
