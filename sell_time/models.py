@@ -19,6 +19,7 @@ class TimePackage(models.Model):
     @classmethod
     @transaction.atomic
     def seed_packages(cls):
+        print(">>> seeding loop started")
         for i in range(1, 1001):
             package, created = cls.objects.update_or_create(
                 duration_minutes = i, 
