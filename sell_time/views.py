@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import TimePackage
 from django.db.models import Min 
 from faker import Faker
+from django.contrib.auth.decorators import login_required
 
 def homepage(request):
     return render(request, 'sell_time/homepage.html')
@@ -41,10 +42,21 @@ def timepackage_search(request):
 
 def cart(request):
     cart = request.session.get('cart', [])
+    total = sum(item['price'] for item in cart)
     return render(request, 'sell_time/cart.html', {'cart': cart})
 
 def clear_cart(request):
     request.session.pop('cart', None)
+    return redirect('cart')
+
+
+def pay(request):
+    if request.method == 'POST':
+        cart = request.session.get('cart', [])
+        total = sum(item['price'] for item in cart)
+        request.session['cart'] = []
+        request.session.modified = True
+        return render(request, 'sell_time/payment_success.html', {'total': total})
     return redirect('cart')
 
 def graphs(request):

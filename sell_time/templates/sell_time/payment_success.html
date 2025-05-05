@@ -1,0 +1,13 @@
+{% extends 'sell_time/base.html' %}
+{% block title %}Payment Success{% endblock %}
+{% block content %}
+    <h1>Payment Successful!</h1>
+    <p style = "text-align: center;">
+        You paid <strong>£{{ total|floatformat:2 }}</strong>.
+    </p>
+
+    <div style = "text-align: center; margin-top: 30px;">
+        <a href = "{% url 'homepage' %}">Return to Homepage</a>
+        <a href = "{% url 'product_list' %}">Go to Product List</a>
+    </div>
+{% endblock %}

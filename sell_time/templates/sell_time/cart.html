@@ -19,6 +19,10 @@
             text-align: center;
             margin-top: 30px;
         }
+        .pay-button-wrapper {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -37,6 +41,13 @@
             {% csrf_token %}
             <button type="submit">Clear Cart</button>
         </form>
+
+        <div class="pay-button-wrapper">
+        <form method="post" action="{% url 'pay' %}">
+            {% csrf_token %}
+            <button type="submit">Pay Now</button>
+        </form>
+        </div>
 
     {% else %}
         <p class = "center">Your cart is empty!</p>

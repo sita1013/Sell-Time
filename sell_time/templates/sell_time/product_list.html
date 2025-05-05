@@ -1,34 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Time Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <style>
-        h1 {
-            text-align: center;
-        }
-        .button-row {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        select {
-            background-color: lightblue;
-            padding: 10px 20px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #future-select {
-            background-color: lightblue;
-        }
-        #past-select {
-            background-color: lightcoral;
-        }    
-    </style> 
-</head>
-<body>
+{% extends 'sell_time/base.html' %}
+{% block title %}Buy Some Time!{% endblock %}
+{% block content %}
     <h1>Buy Some Time!</h1> 
     <div class = "button-row"> 
         <form method = "post"> 
@@ -53,5 +25,6 @@
         <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
         <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
     </div>
-</body>
-</html>
+{% endblock %}
+
+

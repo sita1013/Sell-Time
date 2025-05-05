@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Homepage</title>
-    <style>
-        h1 {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <h1>Welcome to the Homepage</h1>
+{% extends 'sell_time/base.html' %}
+{% block title %}Homepage{% endblock %}
+{% block content %}
+<h1>Welcome to the Homepage</h1>
     <div style = "text-align: center; margin-top: 30px;">
-    <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
-    <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
+        <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
+        <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
     </div>
-</body>
-</html>
+{% endblock %}
+
