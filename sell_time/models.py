@@ -15,13 +15,15 @@ class TimePackage(models.Model):
 
     def __str__(self):
         return self.name
-
+    
     @classmethod
     @transaction.atomic
     def seed_packages(cls):
-        print(">>> seeding loop started")
-        for i in range(1, 1001):
-            package, created = cls.objects.update_or_create(
+        print(">>> Seeding basic test packages...")
+        created_future = 0
+        created_past = 0
+        for i in range(1, 6):
+            obj, created = cls.objects.get_or_create(
                 duration_minutes = i, 
                 use_type = 'future', 
                 defaults = {
@@ -29,10 +31,12 @@ class TimePackage(models.Model):
                     'description': "Package for future time usage", 
                     'price': 15.00 * 1,
                 }
-            )        
+            )
+            if created: 
+                created_future += 1      
             
-        for i in range(1, 1001):
-            package, created = cls.objects.update_or_create(
+        for i in range(1, 6):
+            obj, created = cls.objects.get_or_create(
                 duration_minutes = i, 
                 use_type = 'past', 
                 defaults = {
@@ -41,4 +45,9 @@ class TimePackage(models.Model):
                     'price': 15.00 * 1,
                 }
             )
+            if created: 
+                created_past += 1
+
+        print(f">>> Created {created_future} 'future' packages.")
+        print(f">>>Created {created_past} 'past' packages.")
         return True  
