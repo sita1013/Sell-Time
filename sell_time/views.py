@@ -51,6 +51,8 @@ def my_timepackages(request):
     packages = TimePackage.objects.filter(creator=request.user)
     return render(request, 'sell_time/my_timepackages.html', {'packages': packages})
 
+
+
 def product_list(request):
     if request.method == 'POST':
         duration = request.POST.get('duration')
@@ -67,7 +69,7 @@ def product_list(request):
             request.session['cart'] = cart
             request.session.modified = True
         except:
-            print("Invalid input. Please type a whole number.")
+            print("Sorry, invalid input. Please type a whole number.")
     return render(request, 'sell_time/product_list.html')
 
 def timepackage_search(request):
@@ -101,5 +103,4 @@ def pay(request):
         return render(request, 'sell_time/payment_success.html', {'total': total})
     return redirect('cart')
 
-def graphs(request):
-    return render(request, 'sell_time/graphs.html')
+
