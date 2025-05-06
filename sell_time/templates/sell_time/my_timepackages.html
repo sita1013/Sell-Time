@@ -3,14 +3,23 @@
 {% block content %}
 <h1 style="text-align: center;">My Time Packages</h1>
     {% if packages %}
-        <ul>
+        <ul style="text-align: center;">
             {% for package in packages %}
                 <li>
                     {{ package.duration_minutes }} min — {{ package.name }} — £{{ package.price|floatformat:2 }}
                 </li>
             {% endfor %}
+            <div style = "text-align: center;">
+                <p>You have successfully created a time package.</p><p>Please choose between bank transfer or store credit.</p>
+            </div>
         </ul>
     {% else %}
         <p style="text-align: center;">You haven't created any packages yet.</p>
 {% endif %}
+
+<div style = "text-align: center; margin-top: 30px;">
+    <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
+    <a href = "{% url 'graphs' %}" class = "btn">About Us</a>
+</div>
+
 {% endblock %}
