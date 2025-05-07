@@ -56,6 +56,7 @@ class TimePackage(models.Model):
 #for when a user buys a timepackage and liks the user and the timepackage to fulfill two linked tables
 class Purchase(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE, null = True, blank = True)
+    email = models.EmailField(null = True, blank = True)
     package = models.ForeignKey(TimePackage, on_delete = models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add = True)
     quantity = models.IntegerField(default = 1)

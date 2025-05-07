@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from .models import TimePackage
+from .models import Purchase, TimePackage
 from django.db.models import Min 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -51,8 +51,6 @@ def my_timepackages(request):
     packages = TimePackage.objects.filter(creator=request.user)
     return render(request, 'sell_time/my_timepackages.html', {'packages': packages})
 
-
-
 def product_list(request):
     if request.method == 'POST':
         duration = request.POST.get('duration')
@@ -69,7 +67,7 @@ def product_list(request):
             request.session['cart'] = cart
             request.session.modified = True
         except:
-            print("Sorry, invalid input. Please type a whole number.")
+            print("Sorry, something went wrong in production_list try block.")
     return render(request, 'sell_time/product_list.html')
 
 def timepackage_search(request):
@@ -88,11 +86,54 @@ def timepackage_search(request):
 def cart(request):
     cart = request.session.get('cart', [])
     total = sum(item['price'] for item in cart)
-    return render(request, 'sell_time/cart.html', {'cart': cart})
+    return render(request, 'sell_time/cart.html', {'cart': cart, 'total': total})
 
 def clear_cart(request):
     request.session.pop('cart', None)
     return redirect('cart')
+
+def guest_checkout(request):
+    cart = request.session.get('cart', [])
+    total = sum(item['price'] for item in cart)
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if not email: 
+            return render(request, 'sell_time/guest_checkout.html', {
+                'error': 'Email is required to checkout as guest.'
+            })
+        for item in cart: 
+            Purchase.objects.create(
+                user = None, 
+                email = email, 
+                package_id = item['id'],
+                quantity = 1
+            )
+        request.session['cart'] = []
+        request.session.modified = True
+        return render(request, 'sell_time/payment_success.html', {
+            'guest_email': email
+        })
+    return render(request, 'sell_time/guest_checkout.html', {
+        'cart': cart,
+        'total': total,
+    })
+
+@login_required
+def user_checkout(request):
+    cart = request.session.get('cart', [])
+    total = sum(item['price'] for item in cart)
+    request.session['cart'] = []
+    request.session.modified = True
+    return render(request, 'sell_time/checkout_success.html', {
+        'cart': cart,
+        'total': total,
+    })
+
+def start_checkout(request):
+    if request.user.is_authenticated:
+        return redirect('checkout')
+    else:
+        return redirect('guest_checkout')
 
 def pay(request):
     if request.method == 'POST':
