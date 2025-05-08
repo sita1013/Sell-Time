@@ -60,7 +60,7 @@ def product_list(request):
         use_type = request.POST.get('use_type')            
         try:
             duration = int(duration) 
-            #added because future packages keep failing
+            #added line 62 because future packages keep failing
             package = TimePackage.objects.get(duration_minutes = duration, use_type = use_type)
             cart = request.session.get('cart', [])
             cart.append({

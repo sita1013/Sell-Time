@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Buy Some Time!</h1> 
     <div class = "button-row"> 
-        <form method = "post"> 
+        <form method = "post">
             {% csrf_token %} 
             <label>Enter Minutes (Future):</label> 
             <input type="number" name="duration" min="1" max="7000" required>
