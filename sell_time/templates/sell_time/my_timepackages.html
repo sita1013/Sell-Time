@@ -10,15 +10,30 @@
                 </li>
             {% endfor %}
             <div style = "text-align: center;">
-                <p>You have successfully created a time package.</p><p>Please choose between bank transfer or store credit.</p>
+                <p>You have successfully created a time package.</p>
             </div>
         </ul>
     {% else %}
         <p style="text-align: center;">You haven't created any packages yet.</p>
-{% endif %}
-
-<div style = "text-align: center; margin-top: 30px;">
-    <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
-</div>
-
+    {% endif %}
+    {% if messages %}
+    <div style="text-align: center; margin-top: 15px;">
+        {% for message in messages %}
+            <div style="padding: 10px; border-radius: 5px; margin-bottom: 10px; background-color: #e0ffe0; color: #006400;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div style = "text-align: center; margin-top: 30px;">           
+        <form action="{% url 'send_to_bank' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn">Send to Bank</button>
+        </form>
+        <form action="{% url 'store_credit' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn">Store as Credit</button>
+        </form>
+        <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a> 
+    </div>
 {% endblock %}

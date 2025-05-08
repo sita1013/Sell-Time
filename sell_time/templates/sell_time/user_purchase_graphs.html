@@ -1,0 +1,32 @@
+{% extends "sell_time/base.html" %}
+{% block title %}Your Weekly Purchase History{% endblock %}
+{% block content %}
+<h1 style="text-align: center;">Your Weekly Purchase Activity</h1>
+<canvas id="purchaseChart" width="600" height="300" style="display: block; margin: 0 auto;"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('purchaseChart').getContext('2d');
+    const purchaseChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                label: 'Purchases per Day',
+                data: {{ counts|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 1
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
