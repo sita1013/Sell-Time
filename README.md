@@ -40,3 +40,8 @@ Log in at http://localhost:8000/admin
 - username = "username"
 - email = "user@example.com"
 - temp_pswrd = "secret123!"
+
+## Notes
+- possible to change to PostgreSQL but codio hasn't worked well with it when I've done it in the past
+- functions in views that don't connect to html because they're just to show the potential of the direction 
+    but didn't want to connect just yet to html
