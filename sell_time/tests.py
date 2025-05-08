@@ -10,12 +10,10 @@ class SimpleURLTests(TestCase):
         response = self.client.get(reverse('homepage'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sell_time/homepage.html')
-
     def test_product_list_url(self):
         response = self.client.get(reverse('product_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'sell_time/product_list.html')
-
     def test_cart_url(self):
         response = self.client.get(reverse('cart'))
         self.assertEqual(response.status_code, 200)
@@ -36,7 +34,6 @@ class TimePackageDuplicateTest(TestCase):
 class TimePackageModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpass')
-
     def test_create_timepackage(self):
         package = TimePackage.objects.create(
             name='Test Package',
@@ -61,7 +58,6 @@ class PurchaseModelTest(TestCase):
             use_type='past',
             creator=self.user
         )
-
     def test_create_purchase(self):
         purchase = Purchase.objects.create(
             user=self.user,

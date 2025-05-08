@@ -3,11 +3,13 @@ from .models import TimePackage
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+#basic timepackage for forms
 class TimePackageForm(forms.ModelForm):
     class Meta:
         model = TimePackage
         fields = ['description', 'duration_minutes', 'use_type']
 
+#making sure the usernames and emails aren't replicated since they're the main way to identify users
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required = True)
     def clean_email(self):

@@ -7,7 +7,6 @@ import random
 
 class Command(BaseCommand):
     help = 'Seeds the database with TimePackage and Purchase data'
-
     def handle(self, *args, **kwargs):
         fake = Faker()
         self.stdout.write(">>> Started seeding")
@@ -19,7 +18,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING("No changes were made."))
         except Exception as e:
             self.stderr.write(f"Error while seeding: {e}")
-        #for faker test users
+    #for faker test users
         for i in range(10):
             username = fake.user_name()
             if not User.objects.filter(username = username).exists():
@@ -29,7 +28,7 @@ class Command(BaseCommand):
         for pkg in unassigned[:30]:
             pkg.creator = random.choice(users)
             pkg.save()
-        #fake purchases
+    #fake purchases // didn't do any for sales
         packages = list(TimePackage.objects.all())
         for i in range(40):
             user = random.choice(users)
@@ -40,7 +39,7 @@ class Command(BaseCommand):
                 package = package, 
                 quantity = random.randint(1, 2)
             )
-        self.stdout.write(self.style.SUCCESS("Fake users, purchases, and sales created."))
+        self.stdout.write(self.style.SUCCESS("Fake users and purchases."))
         self.stdout.write(f"{len(users)} users total.")
         assigned_count = min(len(unassigned), 30)
         self.stdout.write(f"{assigned_count} packages assigned to users.")

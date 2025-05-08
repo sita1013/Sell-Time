@@ -12,9 +12,11 @@ from .forms import TimePackageForm, CustomUserCreationForm
 from .models import Purchase, TimePackage
 from faker import Faker
 
+#basic start page
 def homepage(request):
     return render(request, 'sell_time/homepage.html')
 
+#for signing up to become a user
 class SignUpView(FormView):
     template_name = 'sell_time/signup.html'
     form_class = CustomUserCreationForm
@@ -24,10 +26,12 @@ class SignUpView(FormView):
         form.save()
         return super().form_valid(form)
 
+#issues with logging out so included this to make sure it doesn't cause an error
 def manual_logout(request):
     logout(request)
     return redirect('homepage')
 
+#create a time package for users before checking out in next function
 @login_required
 def create_timepackage(request):
     price = None
@@ -47,6 +51,7 @@ def create_timepackage(request):
         'price': price,
     })
 
+#checkout section for the created timepackage to sell
 @login_required
 def my_timepackages(request):
     packages = TimePackage.objects.filter(creator=request.user)
@@ -54,6 +59,7 @@ def my_timepackages(request):
         'packages': packages,
     })
 
+#list of products and this pulls from the models
 def product_list(request):
     if request.method == 'POST':
         duration = request.POST.get('duration')
@@ -75,6 +81,7 @@ def product_list(request):
             print("Sorry, something went wrong in production_list try block.")
     return render(request, 'sell_time/product_list.html')
 
+#makes it possible to search for products
 def timepackage_search(request):
     q = request.GET.get('q', '')
     use_type = request.GET.get('type', 'future')
@@ -88,6 +95,7 @@ def timepackage_search(request):
     ]
     return JsonResponse({'results': data})
 
+#cart information 
 def cart(request):
     cart = request.session.get('cart', [])
     total = sum(item['price'] for item in cart)
@@ -96,10 +104,12 @@ def cart(request):
         'total': total,
     })
 
+#ability to clear cart
 def clear_cart(request):
     request.session.pop('cart', None)
     return redirect('cart')
 
+#possible to checkout as a guest but requires email
 def guest_checkout(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -131,6 +141,7 @@ def guest_checkout(request):
         'total': total,
     })
 
+#special checkout for user
 @login_required
 @require_http_methods(["GET", "POST"])
 def user_checkout(request):
@@ -155,11 +166,13 @@ def user_checkout(request):
         'total': total,
     })
 
+#success page for user pay
 @login_required
 def user_pay_success(request):
     total = request.session.get('last_payment_total', 0)
     return render(request, 'sell_time/user_pay_success.html', {'total': total})
 
+#ability to send to bank // isn't currently in the htmls fur user_pay_success but just for future option
 @require_POST
 @login_required
 def send_to_bank(request):
@@ -167,6 +180,7 @@ def send_to_bank(request):
     messages.success(request, "Funds will be transferred to your bank account.")
     return redirect('purchase_history')
 
+#ability to store credit // isn't currently in the htmls fur user_pay_success but just for future option
 @require_POST
 @login_required
 def store_credit(request):
@@ -174,6 +188,7 @@ def store_credit(request):
     messages.success(request, "Amount stored as credit on your account.")
     return redirect('purchase_history')
 
+#keeps the purchases and sales in record per user
 @login_required
 def purchase_history(request):
     user = request.user
@@ -186,6 +201,7 @@ def purchase_history(request):
         'sales': sales,
     })
 
+#can render graphs on purchase history for users
 @login_required
 def user_purchase_graphs(request):
     user = request.user
@@ -205,6 +221,7 @@ def user_purchase_graphs(request):
         'counts': counts
     })
 
+#pay for guest
 def pay(request):
     if request.method == 'POST':
         cart = request.session.get('cart', [])
