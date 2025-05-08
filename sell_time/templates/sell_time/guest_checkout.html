@@ -2,7 +2,7 @@
 {% block title %}Guest Checkout{% endblock %}
 {% block content %}
 <h1>Guest Checkout</h1>
-  <p class="center"><strong>Total:</strong> £{{ total|floatformat:2 }}</p>
+  <p style = "text-align: center;"><strong>Total:</strong> £{{ total|floatformat:2 }}</p> 
   <form method="post" style="text-align: center;">
     {% csrf_token %}
       <label>Email:</label>

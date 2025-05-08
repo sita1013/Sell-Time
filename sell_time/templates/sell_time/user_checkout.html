@@ -1,0 +1,24 @@
+{% extends 'sell_time/base.html' %}
+{% block title %}User Checkout{% endblock %}
+{% block content %}
+    <h1>Review Your Cart</h1>
+
+    {% if cart %}
+        <li style = "text-align: center; list-style: none;">
+            {% for item in cart %}
+                <li>{{ item.duration }} min — {{ item.name }} — £{{ item.price|floatformat:2 }}</li>
+            {% endfor %}
+        </li>
+        <p style = "text-align: center;"><strong>Total:</strong> £{{ total|floatformat:2 }}</p>
+        <form method = "post" action="{% url 'user_pay_success' %}" style = "text-align: center;">
+            {% csrf_token %}
+                <button type="submit">Complete Purchase</button>
+        </form>
+    {% else %}
+        <p style = "text-align: center;">Your cart is empty.</p>
+    {% endif %}
+        <div style = "text-align: center; margin-top: 30px;">
+            <a href = "{% url 'create_timepackage' %}" class = "btn">Sell Your Time</a>
+            <a href = "{% url 'product_list' %}" class = "btn">Back to Products</a>
+        </div>
+{% endblock %}

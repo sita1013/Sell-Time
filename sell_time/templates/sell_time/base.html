@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>{% block title %}Time Shop{% endblock %}</title>
+    {% block style %}{% endblock %}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         body {
@@ -50,13 +51,11 @@
 <body>
     <div class="top-bar">
         {% if user.is_authenticated %}
+            <a href = "{% url 'purchase_history' %}">My Purchases</a>
             Welcome, {{ user.username }} |
-            <a href="{% url 'create_timepackage' %}">Sell Your Time</a> |
-            <a href="{% url 'my_timepackages' %}">My Packages</a> |
             <a href="{% url 'logout' %}">Log out</a>
         {% else %}
-            <a href="{% url 'login' %}">Log in</a> |
-            <a href="{% url 'signup' %}">Sign up</a>
+            <a href="{% url 'login' %}">Log in</a>
         {% endif %}
     </div>    
     {% block content %}

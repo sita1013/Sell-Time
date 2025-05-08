@@ -2,9 +2,15 @@
 {% block title %}Log In{% endblock %}
 {% block content %}
 <h1 style="text-align: center;">Login</h1>
-    <form method="post" style="text-align: center;">
+    <form method="post" action="{% url 'login' %}" style="text-align: center;">
         {% csrf_token %}
         {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}">
         <button type="submit">Log In</button>
     </form>
+    <div style = "text-align: center; margin-top: 30px;">
+        <a href="{% url 'signup' %}" class = 'btn'>Sign up</a>
+        <a href = "{% url 'homepage' %}" class = 'btn'>Return to Homepage</a>
+        <a href = "{% url 'product_list' %}" class = 'btn'>Go to Product List</a>
+    </div>
 {% endblock %}

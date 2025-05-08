@@ -1,13 +1,99 @@
 {% extends 'sell_time/base.html' %}
 {% block title %}Sign Up{% endblock %}
+    {% block style %}
+        <style>
+            .signup-wrapper {
+                max-width: 600px;
+                margin: auto;
+                text-align: center;
+            }
+            .signup-wrapper h1 {
+                text-align: center;
+            }
+            form.signup-form {
+                max-width: 400px;
+                margin: auto;
+                text-align: center;
+              }
+            .form-group {
+                margin-bottom: 20px;
+              }
+            details {
+                font-size: 0.85em;
+                margin-top: 4px;
+            }
+            details summary {
+                cursor: pointer;
+                font-weight: normal;
+                color: #444;
+            }
+            .help {
+                background: #f0f0f0;
+                padding: 6px 10px;
+                border-left: 4px solid #888;
+                border-radius: 4px;
+                margin-top: 4px;
+            }
+            input {
+                width: 100%;
+                padding: 6px;
+                margin-top: 4px;
+            }
+            button {
+                margin-top: 10px;
+              }        
+        </style>
+    {% endblock %}
 {% block content %}
-<h1 style="text-align: center;">Create an Account</h1>
-
-<form method="post" style="text-align: center;">
+<div class = "signup-wrapper">
+    <h1>Create an Account</h1>
+    <form method="post" class = "signup-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-</form>
+        <div class = "form-group">
+            <label for = "id_username">Username</label>
+                <details>
+                    <summary>What's this?</summary>
+                    <p class="help">150 characters max. Letters, digits, and only @/./+/-/_ as special characters.</p>
+                  </details>            
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+        <div class = "form-group">
+            <label for = "id_email">Email</label>
+                <details>
+                    <summary>What's this?</summary>
+                    <p class = "help">Please enter a valid email.</p>
+                </details>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div>
+        <div class = "form-group">
+            <label for = "id_password1">Password</label>
+                <details>
+                    <summary>What's this?</summary>
+                    <p class = "help">At least 8 characters, not too common, and not too similar to your name/email.</p>
+                </details>
+            {{ form.password1 }}
+            {{ form.password1.errors }}
+        </div>
+        <div class = "form-group">
+            <label for = "id_password2">Confirm Password</label>
+            <details>
+                <summary>What's this?</summary>
+                <p class = "help">Must match.</p>
+            </details>
 
-<p style="text-align: center;">Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
+            {{ form.password2 }}
+            {{ form.password2.errors }}
+        </div>
+        <button type="submit">Sign Up</button>
+    </form>
+    <p style="text-align: center; margin-top: 15px;">
+        Already have an account? <a href="{% url 'login' %}" class = 'btn'>Log in here</a>.
+    </p>
+    <div style = "text-align: center; margin-top: 30px;">
+        <a href = "{% url 'homepage' %}" class = 'btn'>Return to Homepage</a>
+        <a href = "{% url 'product_list' %}" class = 'btn'>Go to Product List</a>
+    </div>
+</div>
 {% endblock %}

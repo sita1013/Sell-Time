@@ -1,0 +1,15 @@
+{% extends 'sell_time/base.html' %}
+{% block title %}Payment Success{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Payment Successful!</h1>
+        <p style = "text-align: center;">
+            You paid <strong>£{{ total|floatformat:2 }}</strong>.
+        </p>
+        <div style = "text-align: center; margin-top: 30px;">
+            <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
+            <a href = "{% url 'product_list' %}" class = "btn">Go to Product List</a>
+            <a href = "{%url 'purchase_history'%}" class = "btn">Purchase History</a>
+        </div>
+    {% endif %}
+{% endblock %}

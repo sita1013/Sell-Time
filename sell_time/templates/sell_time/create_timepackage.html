@@ -3,7 +3,7 @@
 {% block content %}
 <h1 style="text-align: center;">Sell Your Time</h1>
 
-    <form method="post" style="max-width: 500px; margin: auto;">
+    <form method="post" style="max-width: 500px; margin: auto; text-aling: center;">
         {% csrf_token %}
         {{ form.as_p }}
         <p><strong>Note:</strong> You will be paid £1 per minute.</p>
@@ -12,5 +12,7 @@
         {% endif %}
         <button type="submit">Create Package</button>
     </form>
-    <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
+    <div style = "text-align: center; margin-top: 30px;">
+        <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
+    </div>
 {% endblock %}

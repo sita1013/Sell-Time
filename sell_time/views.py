@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from .models import Purchase, TimePackage
+from django.urls import reverse_lazy
 from django.db.models import Min 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import FormView
-from .forms import TimePackageForm
-from django.urls import reverse_lazy
+from django.views.decorators.http import require_http_methods
+from .forms import TimePackageForm, CustomUserCreationForm
+from .models import Purchase, TimePackage
 
 from faker import Faker
 
@@ -16,7 +16,7 @@ def homepage(request):
 
 class SignUpView(FormView):
     template_name = 'sell_time/signup.html'
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
@@ -56,6 +56,7 @@ def product_list(request):
         duration = request.POST.get('duration')
         use_type = request.POST.get('use_type')            
         try:
+            duration = int(duration) #added because future packages keep failing
             package = TimePackage.objects.get(duration_minutes = duration, use_type = use_type)
             cart = request.session.get('cart', [])
             cart.append({
@@ -93,14 +94,16 @@ def clear_cart(request):
     return redirect('cart')
 
 def guest_checkout(request):
-    cart = request.session.get('cart', [])
-    total = sum(item['price'] for item in cart)
     if request.method == 'POST':
         email = request.POST.get('email')
+        cart = request.session.get('cart', [])
         if not email: 
             return render(request, 'sell_time/guest_checkout.html', {
-                'error': 'Email is required to checkout as guest.'
+                'error': 'Email is required to checkout as guest.',
+                'cart': cart, 
+                'total': sum(item['price'] for item in cart),
             })
+        total = sum(item['price'] for item in cart)
         for item in cart: 
             Purchase.objects.create(
                 user = None, 
@@ -111,29 +114,52 @@ def guest_checkout(request):
         request.session['cart'] = []
         request.session.modified = True
         return render(request, 'sell_time/payment_success.html', {
-            'guest_email': email
+            'guest_email': email,
+            'total' : total
         })
+    cart = request.session.get('cart', [])
+    total = sum(item['price'] for item in cart)
     return render(request, 'sell_time/guest_checkout.html', {
         'cart': cart,
         'total': total,
     })
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def user_checkout(request):
     cart = request.session.get('cart', [])
     total = sum(item['price'] for item in cart)
-    request.session['cart'] = []
-    request.session.modified = True
-    return render(request, 'sell_time/checkout_success.html', {
-        'cart': cart,
+    if request.method == "POST":
+        request.session['last_payment_total'] = total
+        request.session['cart'] = []
+        request.session.modified = True
+        return render(request, 'sell_time/user_pay_success.html', {'total': total})
+    return render(request, 'sell_time/user_checkout.html', {
+        'cart': cart, 
         'total': total,
     })
 
-def start_checkout(request):
+@login_required
+def user_pay_success(request):
+    total = request.session.get('last_payment_total', 0)
+    return render(request, 'sell_time/user_pay_success.html', {'total': total})
+
+@login_required
+def purchase_history(request):
+    user = request.user
+    #all purchases where the user was indeed the user
+    purchases = Purchase.objects.filter(user=user).select_related('package').order_by('-timestamp')
+    #all sales where user was indeed the user
+    sales = TimePackage.objects.filter(creator=user).order_by('-id')
+    return render(request, 'sell_time/purchase_history.html', {
+        'purchases': purchases
+    })
+
+"""def start_checkout(request):
     if request.user.is_authenticated:
-        return redirect('checkout')
+        return redirect('user_checkout')
     else:
-        return redirect('guest_checkout')
+        return redirect('guest_checkout')"""
 
 def pay(request):
     if request.method == 'POST':

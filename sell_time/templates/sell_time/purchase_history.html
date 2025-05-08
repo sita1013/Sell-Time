@@ -1,0 +1,45 @@
+{% extends 'sell_time/base.html' %}
+{% block title %}Your Purchases and Sales{% endblock %}
+{% block content %}
+    {% block style %}   
+        <style>
+            li {
+                text-align: center;
+                list-style: none;
+                margin-bottom: 8px;
+            }
+        </style>
+    {% endblock %}
+    <h1 style="text-align: center;">Purchase and Sale History</h1>
+        <h2>Purchased Time</h2>
+        {% if purchases %}
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for p in purchases %}
+                    <li>
+                        {{ p.package.name }} — {{ p.package.duration_minutes }} min — £{{ p.package.price|floatformat:2 }} on {{ p.timestamp|date:"Y-m-d H:i" }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="text-align: center;">You haven't made any purchases yet.</p>
+        {% endif %}
+        <h2>Time Sold</h2>
+        {% if sales %}
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for s in sales %}
+                    <li>
+                        {{ s.name }} - {{ s.duration_minutes }} min - £{{ s.price|floatformat:2 }}
+                        {% if s.created_at %}
+                            on {{ s.created_at|date:"Y-m-d H:i" }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="text-align: center;">You haven't made any sales yet.</p>
+        {% endif %}
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'homepage' %}" class="btn">Return to Homepage</a>
+        <a href="{% url 'product_list' %}" class="btn">See Products</a>
+    </div>
+{% endblock %}

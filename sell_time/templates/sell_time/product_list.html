@@ -23,6 +23,11 @@
         <p><strong>Note:</strong> Each minute is £1.</p>
         <a href = "{% url 'cart' %}" class = "btn">Check Out</a>
         <a href = "{% url 'homepage' %}" class = "btn">Return to Homepage</a>
+        {% if user.is_authenticated %}
+            <a href = "{% url 'create_timepackage' %}" class = "btn">Sell Your Time</a>
+        {% else %}
+            <a href = "{% url 'login' %}?next={% url 'create_timepackage' %}" class = "btn">Log In to Sell Your Time</a>
+        {% endif %}
     </div>
 {% endblock %}
 

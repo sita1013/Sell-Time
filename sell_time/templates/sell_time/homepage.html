@@ -3,9 +3,14 @@
 {% block content %}
 <h1>Welcome to the Homepage</h1>
     <div style = "text-align: center; margin-top: 30px;">
-        <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
-        <a href="{% url 'login' %}" class = 'btn'>Log in</a>
-        <a href="{% url 'signup' %}" class = 'btn'>Sign up</a>
+        {% if user.is_authenticated %}
+            <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
+            <a href = "{% url 'create_timepackage' %}" class = "btn">Sell Your Time</a>
+        {% else %}
+            <a href = "{% url 'product_list' %}" class = "btn">Search for Product</a>
+            <a href="{% url 'login' %}" class = 'btn'>Log in</a>
+            <a href="{% url 'signup' %}" class = 'btn'>Sign up</a>
+        {% endif %}
     </div>
 {% endblock %}
 
