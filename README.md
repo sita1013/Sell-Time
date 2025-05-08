@@ -15,11 +15,10 @@ Admin Dashboard: View bar chart of weekly purchases.
 ## Directions for starting App
 pip install -r requirements.txt
 python3 manage.py migrate
-python3 manage.py seed_packages
+python3 manage.py seed_packages (creates both the time-packages and faker)
 python3 manage.py shell
 >>> from yourapp.models import TimePackage
 >>> TimePackage.seed_packages()
-python3 manage.py seed_timepackages
 python3 manage.py runserver 0.0.0.0:8000
 
 - Go to localhost:8000
