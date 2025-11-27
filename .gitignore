@@ -27,8 +27,8 @@ local_settings.py
 #!**/migrations/__init__.py
 
 # Environment variables & secrets (since it's an assignment...not putting into gitignore for now)
-#.env
-#.env.*
+.env
+.env.*
 
 # Build artifacts
 *.egg-info/
