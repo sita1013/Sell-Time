@@ -38,3 +38,4 @@ dist/
 # Jupyter (if used)
 .ipynb_checkpoints/
 .env
+.env
