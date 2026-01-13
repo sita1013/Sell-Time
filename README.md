@@ -29,18 +29,6 @@ sell_time/views.py – Checkout logic, cart, user actions
 sell_time/management/commands/seed_packages.py – Seeder with Faker
 templates/ – All HTML pages (including admin customization)
 
-## Render
-username: seluvaiasariahita@gmail.com
-paswrd: secret1234!
-https://cs551q-solo-app-final.onrender.com
-
-
-## Admin Panel
-Log in at http://localhost:8000/admin
-- username = "username"
-- email = "user@example.com"
-- temp_pswrd = "secret123!"
-
 ## Notes
 - possible to change to PostgreSQL but codio hasn't worked well with it when I've done it in the past
 - functions in views that don't connect to html because they're just to show the potential of the direction 
