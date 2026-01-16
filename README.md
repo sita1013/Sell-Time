@@ -3,6 +3,13 @@ For guests, they can buy time. If they become users, they can buy and sell time.
 There are admin tools to see purchases and activity. Faker used to create some 
 users. 
 
+# Note .env
+No intention of making this a live application so .env having been committed and 
+then made clear initially was a rookie mistake on my part. However, if people 
+wanted to copy the code at all, please note that you should make sure the .env 
+is embedded and you'll need to manage to make it private if you're planning to 
+make it live for whatever reason. 
+
 ## Features
 Buy Time: Select minutes for past or future use.
 Sell Time: Authenticated users can list their time packages.
